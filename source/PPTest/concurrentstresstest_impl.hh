@@ -102,10 +102,11 @@ void ConcurrentStressTest<N>::test(Fn fn, Args... args)
 {
     // Wait for permission to start.
     std::unique_lock<std::mutex> lock(mx_);
-    while (!start_flag_){
+    while (!start_flag_ && !abort_flag_){
         cv_.wait(lock);
-        if (abort_flag_) return; //Test cancelled.
     }
+    if (abort_flag_) return; //Test cancelled.
+    lock.unlock();
     // Call function under test.
     fn(args...);
 }
