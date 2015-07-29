@@ -73,9 +73,28 @@ public:
     UniformObjectPool(const UniformObjectPool&) = delete;
     
     /*!
+     * \brief Move-constructor.
+     * \param other Moved object.
+     * \pre None.
+     * \post This object has the state that \p other used to have. \p other
+     *  is left into an unspecified.
+     */
+    UniformObjectPool(UniformObjectPool&& other) noexcept;
+    
+    /*!
      * \brief Assignment operator is forbidden.
      */
     UniformObjectPool& operator = (const UniformObjectPool&) = delete;
+    
+    /*!
+     * \brief Move-assignment operator.
+     * \param other Moved object.
+     * \return Reference to this object.
+     * \pre None.
+     * \post This object has the state that \p other used to have. \p other
+     *  is left into a unspecified but valid state.
+     */
+    UniformObjectPool& operator = (UniformObjectPool&& other) noexcept;
     
     /*!
      * \brief Reserve next object from pool.
@@ -108,7 +127,7 @@ public:
      *  re-usable objects.
      */
     virtual void clear();
-  
+    
     
 protected:
     
@@ -118,6 +137,12 @@ protected:
      *  Instantiating this functor requires \p T to be default constructible.
      */
     static const typename std::function<T*()> DEFAULT_BUILDER;
+    
+    /*!
+     * \brief Returns pointer to the Builder object.
+     * \pre None.
+     */
+    Builder* getBuilder() const;
     
     
 private:

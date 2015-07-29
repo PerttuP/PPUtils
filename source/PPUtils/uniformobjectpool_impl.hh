@@ -38,6 +38,23 @@ UniformObjectPool<T, Builder>::~UniformObjectPool()
 }
 
 
+UniformObjectPool::UniformObjectPool(UniformObjectPool&& other) noexcept
+{
+    std::swap(this->objects_, other.objects_);
+    std::swap(this->builder_, other.builder_);
+}
+
+
+UniformObjectPool& UniformObjectPool::operator =(UniformObjectPool& other) noexcept
+{
+    if (&other != this){
+        std::swap(this->objects_, other.objects_);
+        std::swap(this->builder_, other.builder_);
+    }
+    return *this;
+}
+
+
 template <class T, class Builder>
 std::unique_ptr<T> UniformObjectPool<T, Builder>::reserve()
 {
@@ -72,6 +89,13 @@ template <class T, class Builder>
 void UniformObjectPool<T, Builder>::clear()
 {
     objects_.clear();
+}
+
+
+template <class T, class Builder>
+Builder* UniformObjectPool<T,Builder>::getBuilder() const
+{
+    return builder_.get();
 }
 
 } // Namespace PPUtils
